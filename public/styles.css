@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: #080808;
+    font-family: 'Orbitron', sans-serif;
+    color: #0ff;
+    overflow: hidden;
+}
+
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Mouse Pad */
+.mouse-pad {
+    width: 85vw;
+    height: 50vh;
+    border: 4px solid #0ff;
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    background: rgba(0, 255, 255, 0.1);
+}
+
+.mouse-pad:hover {
+    box-shadow: 0 0 25px #00ffff, 0 0 50px #00ffff;
+}
+
+/* Cursor */
+.cursor {
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, #0ff 20%, transparent);
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s linear;
+    filter: drop-shadow(0 0 5px #0ff);
+}
+
+/* Tap Effect */
+.tap-effect {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 15px #0ff;
+    animation: clickEffect 0.3s ease-out;
+    pointer-events: none;
+}
+
+@keyframes clickEffect {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+button {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 16px;
+    border: 2px solid #0ff;
+    background: transparent;
+    color: #0ff;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s ease-in-out;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #0ff;
+}
+
+button:hover {
+    background: #0ff;
+    color: #000;
+    box-shadow: 0 0 20px #00ffff;
+}
+
+/* Keyboard */
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(0, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 10px;
+    border: 2px solid #0ff;
+    box-shadow: 0 0 10px #0ff;
+}
+
+/* Keyboard Rows */
+.row {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+/* Keys */
+.key {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #0ff;
+    background: transparent;
+    color: #0ff;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s ease-in-out;
+    box-shadow: 0 0 5px #0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Key Hover Effect */
+.key:hover {
+    background: #0ff;
+    color: #000;
+    box-shadow: 0 0 15px #00ffff;
+}
+
+/* Special Keys */
+.key[data-key="Enter"] {
+    width: 72px;
+}
+
+.key[data-key="Shift"],
+.key[data-key="Control"],
+.key[data-key="Backspace"],
+.key[data-key="Tab"] {
+    width: 54px;
+}
+
+.key[data-key="Space"] {
+    width: 150px;
+}
+
+/* Responsive - Adjust Keyboard Size */
+@media (max-width: 600px) {
+    .mouse-pad {
+        height: 35vh;
+    }
+
+    .cursor {
+        width: 10px;
+        height: 10px;
+    }
+
+    .keyboard {
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .key {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .key[data-key="Enter"] {
+        width: 60px;
+    }
+
+    .key[data-key="Space"] {
+        width: 120px;
+    }
+}
