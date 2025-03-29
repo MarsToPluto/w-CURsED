@@ -2,45 +2,35 @@ const ws = new WebSocket(`ws://${window.location.hostname}:3000`);
 
 let lastX = null, lastY = null, touchStartX = null, touchStartY = null, isScrolling = false;
 
-ws.onopen = () => console.log("✅ Connected to WebSocket!");
-ws.onerror = (err) => console.error("⚠️ WebSocket error:", err);
-ws.onclose = () => console.log("❌ Disconnected!");
+ws.onopen = () => console.log("Connected to WebSocket!");
+ws.onerror = (err) => console.error("WebSocket error:", err);
+ws.onclose = () => console.log("Disconnected!");
 
-// ✅ Send mouse movement data
+// Send mouse movement data
 function sendMouseMove(dx, dy) {
     if (ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ dx, dy }));
     }
 }
 
-// ✅ Send left click
+// Send left click
 function sendClick() {
     if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ click: "left" })); // Fix: Now sends correct JSON structure
+        ws.send(JSON.stringify({ click: true }));
     }
 }
 
-// ✅ Send right click
+// Send right click
 function sendRightClick() {
     if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ click: "right" })); // Fix: Corrected JSON key
+        ws.send(JSON.stringify({ rightClick: true }));
     }
 }
 
-// ✅ Send keyboard key press
+// Send keyboard key press
 function sendKeyPress(key) {
     if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ key }));
-    }
-}
-
-// ✅ Send trackpad tap click (Debounced)
-let lastTapTime = 0;
-function sendTapClick() {
-    let now = Date.now();
-    if (now - lastTapTime > 200) {  // Debounce to prevent double tap
-        sendClick();
-        lastTapTime = now;
+        ws.send(JSON.stringify({ key: key }));
     }
 }
 
@@ -49,18 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 🖱️ Mouse movement (Desktop)
     pad.addEventListener("mousemove", (event) => {
-        if (event.buttons === 1) { // Only move if left button is held
-            if (lastX !== null && lastY !== null) {
-                let dx = event.movementX;
-                let dy = event.movementY;
-                sendMouseMove(dx, dy);
-            }
+        if (lastX !== null && lastY !== null) {
+            let dx = event.movementX;
+            let dy = event.movementY;
+            sendMouseMove(dx, dy);
         }
         lastX = event.clientX;
         lastY = event.clientY;
     });
 
-    // 📱 Touchpad movement (Mobile - Improved handling)
+    // 📱 Touchpad movement (Mobile - Fixed accidental clicks)
     pad.addEventListener("touchstart", (event) => {
         if (event.touches.length > 0) {
             let touch = event.touches[0];
@@ -92,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     pad.addEventListener("touchend", (event) => {
         if (!isScrolling) {
-            sendTapClick();
+            sendClick();
             let touch = event.changedTouches[0];
             createTapEffect(touch.clientX, touch.clientY);
         }
@@ -101,27 +89,11 @@ document.addEventListener("DOMContentLoaded", () => {
         lastY = null;
     });
 
-    // 🖱️ Click (Desktop)
     pad.addEventListener("click", (event) => {
         sendClick();
         createTapEffect(event.clientX, event.clientY);
     });
 
-    // ✅ Left Click Button
-    document.getElementById("left-click").addEventListener("click", sendClick);
-
-    // ✅ Right Click Button
-    document.getElementById("right-click").addEventListener("click", sendRightClick);
-
-    // 🎹 Keyboard functionality
-    document.querySelectorAll(".key").forEach((button) => {
-        button.addEventListener("click", () => {
-            let key = button.dataset.key;
-            sendKeyPress(key);
-        });
-    });
-
-    // 🔘 Tap Effect
     function createTapEffect(x, y) {
         let effect = document.createElement("div");
         effect.classList.add("tap-effect");
@@ -131,6 +103,21 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => effect.remove(), 300);
     }
 
-    // ✅ Prevent text selection on tap
-    document.body.style.userSelect = "none";
+    // 🎹 Keyboard functionality
+    document.querySelectorAll(".key").forEach((button) => {
+        button.addEventListener("click", () => {
+            let key = button.dataset.key;
+            sendKeyPress(key);
+        });
+    });
+
+    // Left Click Button
+    document.getElementById("left-click").addEventListener("click", () => {
+        sendClick();
+    });
+
+    // Right Click Button
+    document.getElementById("right-click").addEventListener("click", () => {
+        sendRightClick();
+    });
 });

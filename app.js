@@ -64,16 +64,18 @@ wss.on("connection", (ws) => {
             if (msg.click === "left") {
                 console.log("🖱️ Left Click");
                 robot.mouseClick("left");
+                return
             }
 
             // ✅ Right Click (No Limit)
             if (msg.click === "right") {
                 console.log("🖱️ Right Click");
                 robot.mouseClick("right");
+                return
             }
 
             // ✅ Trackpad Click (200ms Debounce)
-            if (msg.click === "pad") {
+            if (msg.click) {
                 if (now - lastClickTime > 200) {
                     console.log("🖱️ Trackpad Click");
                     robot.mouseClick("left");
